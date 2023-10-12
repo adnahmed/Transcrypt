@@ -978,6 +978,33 @@ list.__bases__ = [object];
 
 Array.prototype.__iter__ = function () {return new __PyIterator__ (this);};
 
+Uint8Array.prototype.__getslice__ = function (start, stop, step) {
+    if (start < 0) {
+        start = this.length + start;
+    }
+
+    if (stop == null) {
+        stop = this.length;
+    }
+    else if (stop < 0) {
+        stop = this.length + stop;
+    }
+    else if (stop > this.length) {
+        stop = this.length;
+    }
+
+    if (step == 1) {
+        return Uint8Array.prototype.slice.call(this, start, stop);
+    }
+
+    let result = list ([]);
+    for (let index = start; index < stop; index += step) {
+        result.push (this [index]);
+    }
+
+    return result;
+};
+
 Array.prototype.__getslice__ = function (start, stop, step) {
     if (start < 0) {
         start = this.length + start;
